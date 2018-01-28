@@ -28,26 +28,50 @@ public abstract class Aircraft {
             this.name = name;
         }
 
-        public Builder capacity(int CAPACITY) {
-            this.capacity = CAPACITY;
+        /**
+         * Set the builder's capacity
+         * @param capacity aircraft's capacity
+         * @return a reference to this object.
+         */
+        public Builder capacity(int capacity) {
+            this.capacity = capacity;
             return this;
         }
 
-        public Builder flightRange(int FLIGHT_RANGE) {
-            this.flightRange = FLIGHT_RANGE;
+        /**
+         * Set the builder's flight range
+         * @param flightRange aircraft's flight range
+         * @return a reference to this object.
+         */
+        public Builder flightRange(int flightRange) {
+            this.flightRange = flightRange;
             return this;
         }
 
-        public Builder carryingCapacity(int CARRYING_CAPACITY) {
-            this.carryingCapacity = CARRYING_CAPACITY;
+        /**
+         * Set the builder's carrying capacity
+         * @param carryingCapacity aircraft's carrying capacity
+         * @return a reference to this object.
+         */
+        public Builder carryingCapacity(int carryingCapacity) {
+            this.carryingCapacity = carryingCapacity;
             return this;
         }
 
-        public Builder fuelConsumption(float FUEL_CONSUMPTION) {
-            this.fuelConsumption = FUEL_CONSUMPTION;
+        /**
+         * Set the builder's fuel consumption
+         * @param fuelConsumption aircraft's fuel consumption
+         * @return a reference to this object.
+         */
+        public Builder fuelConsumption(float fuelConsumption) {
+            this.fuelConsumption = fuelConsumption;
             return this;
         }
 
+        /**
+         * Create a new instance of aircraft
+         * @return aircraft's new instance with filled fields
+         */
         public abstract Aircraft build();
     }
 
@@ -73,11 +97,10 @@ public abstract class Aircraft {
 
     @Override
     public String toString() {
-        StringBuilder instatceText = new StringBuilder();
-        return instatceText.append("Airplane ".toUpperCase()).append(NAME).append(":capacity ")
-                .append(CAPACITY).append(",flight range ").append(FLIGHT_RANGE)
-                .append(",carrying capasity ").append(CARRYING_CAPACITY)
-                .append(",fuel consumption ").append(FUEL_CONSUMPTION).toString();
+        return new StringBuilder().append("Airplane ".toUpperCase()).append(NAME).append(":\ncapacity ")
+                .append(CAPACITY).append("\n,flight range ").append(FLIGHT_RANGE)
+                .append("\n,carrying capasity ").append(CARRYING_CAPACITY)
+                .append("\n,fuel consumption ").append(FUEL_CONSUMPTION).toString();
     }
 
     @Override

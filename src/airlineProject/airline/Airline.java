@@ -12,20 +12,18 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Airline implements IAirline {
 
     private final List<Aircraft> airplaneList;
     private final String NAME;
-    private static final String DB_NAME = "AIRPLANES";
-    private static final String DB_URL = "jdbc:h2:tcp://localhost/~/airplanesDB";
+    private static final String DB_NAME = "AIRCRAFTS";
+    private static final String DB_URL = "jdbc:h2:mem:aircraftDB";
     private static final String LOGIN = "airplanes";
     private static final String PASSWORD = "";
-    
+
     public Airline(String NAME) {
-        this(getAirplanesFromDB(), NAME);
+        this(new ArrayList<Aircraft>(), NAME);
 
     }
 
@@ -39,19 +37,32 @@ public class Airline implements IAirline {
         } catch (ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
-
+        createTable();
     }
 
     private static ResultSet getResultSetFromDB(Connection connectionWithDB, String action) throws SQLException {
         Statement statement = connectionWithDB.createStatement();
         ResultSet resultSet = statement.executeQuery(action);
-        connectionWithDB.close();
         return resultSet;
     }
-    
-    private static void SetDataToDB(Connection connectionWithDB, String action) throws SQLException {
+
+    private static void setDataToDB(Connection connectionWithDB, String action) throws SQLException {
         Statement statement = connectionWithDB.createStatement();
         statement.execute(action);
+    }
+
+    private static void createTable() {
+        try {
+            setDataToDB(createConnectionWithDB(), "CREATE TABLE AIRCRAFTS(\n"
+                    + "NAME VARCHAR(20), \n"
+                    + "CAPACITY INT,\n"
+                    + "FLIGHT_RANGE INT, \n"
+                    + "CARRYING_CAPACITY INT,\n"
+                    + "FUEL_CONSUMPTION FLOAT\n"
+                    + ");");
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     private static List<Aircraft> getAirplanesFromDB() {
@@ -67,6 +78,7 @@ public class Airline implements IAirline {
             }
 
         } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
 
         return airplanes;
@@ -84,8 +96,8 @@ public class Airline implements IAirline {
     @Override
     public void addAirplane(Aircraft newAirpnale) {
         try {
-            SetDataToDB(createConnectionWithDB(), new StringBuilder()
-                    .append("INSERT INTO AIRPLANES (NAME ,CAPACITY ,FLIGHT_RANGE ,CARRYING_CAPACITY ,FUEL_CONSUMPTION) VALUES ('")
+            setDataToDB(createConnectionWithDB(), new StringBuilder()
+                    .append("INSERT INTO AIRCRAFTS (NAME ,CAPACITY ,FLIGHT_RANGE ,CARRYING_CAPACITY ,FUEL_CONSUMPTION) VALUES ('")
                     .append(newAirpnale.getName()).append("',")
                     .append(newAirpnale.getCapacity()).append(',')
                     .append(newAirpnale.getFlightRange()).append(',')
@@ -97,21 +109,31 @@ public class Airline implements IAirline {
         }
     }
 
+    private Aircraft findAircraftByName(String name) {
+        for (Aircraft aircraft : airplaneList) {
+            if (aircraft.getName().equals(name)) {
+                return aircraft;
+            }
+        }
+        return null;
+    }
+
     @Override
-    public void removeAirplane(Aircraft removedAirpnale) {
+    public void removeAirplane(String name) {
+
         try {
-            getResultSetFromDB(createConnectionWithDB(), new StringBuilder()
+            setDataToDB(createConnectionWithDB(), new StringBuilder()
                     .append("DELETE FROM ").append(DB_NAME)
                     .append(" WHERE NAME = '")
-                    .append(removedAirpnale.getName()).append("';").toString());
-            airplaneList.remove(removedAirpnale);
+                    .append(name).append("';").toString());
+            airplaneList.remove(findAircraftByName(name));
         } catch (SQLException ex) {
         }
     }
 
     @Override
     public void removeAirplane(int index) {
-        removeAirplane(airplaneList.get(index));
+        removeAirplane(airplaneList.get(index).getName());
     }
 
     public String getNAME() {
@@ -181,9 +203,9 @@ public class Airline implements IAirline {
     }
 
     @Override
-    public ArrayList<Aircraft> findAirplane(int minFuelConsumption, int maxFuelConsumption) {
+    public List<Aircraft> findAirplane(int minFuelConsumption, int maxFuelConsumption) {
 
-        ArrayList<Aircraft> findedAirplane = new ArrayList<>();
+        List<Aircraft> findedAirplane = new ArrayList<>();
         AtomicInteger airplaneIndex = new AtomicInteger(airplaneList.size());
         ExecutorService pool = Executors.newFixedThreadPool(4);
 

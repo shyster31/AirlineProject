@@ -1,10 +1,10 @@
 package airlineProject.airline.aircraft;
 
-public class Plane extends Aircraft implements IPassengersPlane{
-    
-   private Plane(Builder builder){
-       super(builder);
-   }  
+public class Airship extends Aircraft implements ICargoPlane{
+
+    private Airship(Builder builder) {
+        super(builder);
+    }
 
     public static class Builder extends Aircraft.Builder{
         
@@ -14,7 +14,7 @@ public class Plane extends Aircraft implements IPassengersPlane{
 
         @Override
         public Aircraft build() {
-            return new Plane(this);
+            return new Airship(this);
         }
         
     }
