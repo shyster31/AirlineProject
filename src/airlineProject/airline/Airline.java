@@ -18,26 +18,22 @@ public class Airline implements IAirline {
     private final List<Aircraft> airplaneList;
     private final String NAME;
     private static final String DB_NAME = "AIRCRAFTS";
-    private static final String DB_URL = "jdbc:h2:mem:aircraftDB";
+    private static final String DB_URL = "jdbc:h2:./aircraftDB";
     private static final String LOGIN = "airplanes";
     private static final String PASSWORD = "";
 
-    public Airline(String NAME) {
-        this(new ArrayList<Aircraft>(), NAME);
-
-    }
-
-    public Airline(List<Aircraft> airplaneList, String NAME) {
-        this.airplaneList = airplaneList;
-        this.NAME = NAME;
-
+    static {
         try {
             Class.forName("org.h2.Driver");
 
         } catch (ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
-        createTable();
+    }
+
+    public Airline(String NAME) {
+        this.NAME = NAME;
+        this.airplaneList = getAirplanesFromDB();
     }
 
     private static ResultSet getResultSetFromDB(Connection connectionWithDB, String action) throws SQLException {
@@ -78,7 +74,8 @@ public class Airline implements IAirline {
             }
 
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            createTable();
+            airplanes = getAirplanesFromDB();
         }
 
         return airplanes;

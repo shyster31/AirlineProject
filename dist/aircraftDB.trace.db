@@ -1,0 +1,4 @@
+2018-01-28 16:18:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Таблица "AIRCRAFTS" не найдена
+Table "AIRCRAFTS" not found; SQL statement:
+SELECT * FROM AIRCRAFTS; [42102-196]
