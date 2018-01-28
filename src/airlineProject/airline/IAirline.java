@@ -60,10 +60,10 @@ public interface IAirline {
     void sortByFlightRange();
 
     /**
-     *
-     * @param minFuelConsumption
-     * @param maxFuelConsumption
-     * @return
+     * Find aircrafts which fuel consumption included to needed range
+     * @param minFuelConsumption minimum of range
+     * @param maxFuelConsumption maximum of range
+     * @return List of needed aircrafts
      */
     List<Aircraft> findAirplane(int minFuelConsumption, int maxFuelConsumption);
 }
