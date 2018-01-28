@@ -18,5 +18,3 @@ you can use the next commands:
 "sort" - to sort your aircrafts by flight range and display them 
 
 "exit" - to close this programe
-
-All your aircrafts are stored in in-memory database H2
