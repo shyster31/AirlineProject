@@ -17,6 +17,6 @@ you can use the next commands:
 
 "sort" - to sort your aircrafts by flight range and display them 
 
-"fing" - to find the aircrafts which include to range of fuel consumption 
+"find" - to find the aircrafts which fuel consumption included to range 
 
 "exit" - to close this programe
